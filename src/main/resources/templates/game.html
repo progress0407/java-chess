@@ -15,17 +15,30 @@
   <table id="chess-board">
   </table>
 
-  <div>
-    <div>
-      흰색 : 
-      <span id="white-player-id"></span>
-      <span id="white-player-name"></span>
-    </div>
-    <div>
-      검은색 : 
-      <span id="black-player-id"></span>
-      <span id="black-player-name"></span>
-    </div>
+    <table width="200px" style="border: 1px solid black; border-collapse: collapse;">
+      <tr>
+        <td colspan="3">흰색</td>
+      </tr>
+      <tr>
+        <td>ID</td>
+        <td><span id="white-player-id"></span></td>
+        <td>이름</td>
+        <td><span id="white-player-name"></span></td>
+        <td>점수</td>
+        <td><span id="white-player-score"></span></td>
+      </tr>
+      <tr>
+        <td colspan="3">검은색</td>
+      </tr>
+      <tr>
+        <td>ID</td>
+        <td><span id="black-player-id"></span></td>
+        <td>이름</td>
+        <td><span id="black-player-name"></span></td>
+        <td>점수</td>
+        <td><span id="black-player-score"></span></td>
+      </tr>
+    </table>
   </div>
 
   <br /><br />

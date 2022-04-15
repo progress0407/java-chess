@@ -60,6 +60,10 @@ public abstract class Piece {
         return possibleMoveDirections.contains(moveDirection);
     }
 
+    public boolean isPieceTeam(PieceTeam pieceTeam) {
+        return this.pieceTeam == pieceTeam;
+    }
+
     public PieceTeam getPieceTeam() {
         return pieceTeam;
     }

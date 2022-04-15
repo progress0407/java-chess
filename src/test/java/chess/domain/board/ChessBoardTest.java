@@ -1,40 +1,34 @@
 package chess.domain.board;
 
-import static chess.domain.board.ChessBoard.SOURCE_POSITION_SHOULD_HAVE_PIECE_MESSAGE;
-import static chess.domain.board.position.File.A;
-import static chess.domain.board.position.File.B;
-import static chess.domain.board.position.File.C;
-import static chess.domain.board.position.Rank.EIGHT;
-import static chess.domain.board.position.Rank.FOUR;
-import static chess.domain.board.position.Rank.ONE;
-import static chess.domain.board.position.Rank.SEVEN;
-import static chess.domain.board.position.Rank.THREE;
-import static chess.domain.board.position.Rank.TWO;
-import static chess.domain.piece.PieceTeam.WHITE;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
 import chess.domain.board.factory.BoardFactory;
 import chess.domain.board.factory.RegularBoardFactory;
 import chess.domain.board.factory.StringBoardFactory;
 import chess.domain.board.position.File;
 import chess.domain.board.position.Position;
-import chess.domain.board.position.Positions;
 import chess.domain.board.position.Rank;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceTeam;
 import chess.turndecider.AlternatingGameFlow;
 import chess.turndecider.FixedGameFlow;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static chess.domain.board.ChessBoard.SOURCE_POSITION_SHOULD_HAVE_PIECE_MESSAGE;
+import static chess.domain.board.position.File.*;
+import static chess.domain.board.position.Rank.*;
+import static chess.domain.piece.PieceTeam.WHITE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class ChessBoardTest {
 
@@ -189,7 +183,7 @@ public class ChessBoardTest {
     @DisplayName("첫판에 점수를 계산하면 38점이 나온다")
     void when_first_turn_cal_score_then_38() {
         ChessBoard chessBoard = new ChessBoard(boardFactory.create(), new AlternatingGameFlow());
-        double score = chessBoard.calculateScore();
+        double score = chessBoard.calculateScoreByGameFlow();
         assertThat(score).isEqualTo(38.0);
     }
 
@@ -199,7 +193,7 @@ public class ChessBoardTest {
         ChessBoard chessBoard = new ChessBoard(boardFactory.create(), new AlternatingGameFlow());
 
         //then
-        double actual = chessBoard.calculateScore();
+        double actual = chessBoard.calculateScoreByGameFlow();
         assertThat(actual).isEqualTo(38.0);
     }
 
@@ -220,7 +214,31 @@ public class ChessBoardTest {
         ChessBoard chessBoard = new ChessBoard(boardFactory.create(), new AlternatingGameFlow());
 
         //then
-        double actual = chessBoard.calculateScore();
+        double actual = chessBoard.calculateScoreByGameFlow();
         assertThat(actual).isEqualTo(3.5);
+    }
+
+    @Test
+    @DisplayName("흰색팀과 검은색팀의 스코어를 검색한다")
+    void calc_score_white_and_black() {
+        List<String> stringChessBoard = List.of(
+                "RNBQK...",
+                ".....PPP",
+                "........",
+                "........",
+                "........",
+                "p.......",
+                "p.......",
+                "...qk..."
+        );
+        BoardFactory boardFactory = StringBoardFactory.getInstance(stringChessBoard);
+        ChessBoard chessBoard = new ChessBoard(boardFactory.create(), new AlternatingGameFlow());
+
+        //then
+        double blackScore = chessBoard.calculateScoreByTeam(PieceTeam.BLACK);
+        double whiteScore = chessBoard.calculateScoreByTeam(WHITE);
+
+        assertThat(blackScore).isEqualTo(22.5);
+        assertThat(whiteScore).isEqualTo(10.0);
     }
 }

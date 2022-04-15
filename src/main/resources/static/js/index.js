@@ -135,7 +135,6 @@ function currentTeam() {
         dataType: "json"
     })
     .done(function(json) {
-        debugger;
         $('#current-team').text(json);
     })
     .fail(function(xhr, status, errorThrown) {

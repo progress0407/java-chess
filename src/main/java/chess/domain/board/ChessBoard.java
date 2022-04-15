@@ -8,11 +8,13 @@ import chess.domain.board.position.Position;
 import chess.domain.board.position.Rank;
 import chess.domain.piece.EmptySpace;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceTeam;
 import chess.turndecider.GameFlow;
 import chess.turndecider.state.State;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class ChessBoard {
 
@@ -35,12 +37,20 @@ public class ChessBoard {
         gameFlow.nextState(isGameFinished);
     }
 
-    public double calculateScore() {
+    public double calculateScoreByGameFlow() {
+        return calculateScore(gameFlow::isCorrectTurn, gameFlow.currentPieceTeam());
+    }
+
+    public double calculateScoreByTeam(PieceTeam pieceTeam) {
+        return calculateScore(piece -> piece.isPieceTeam(pieceTeam), pieceTeam);
+    }
+
+    public double calculateScore(Predicate<Piece> condition, PieceTeam pieceTeam) {
         return board.values()
                 .stream()
-                .filter(gameFlow::isCorrectTurn)
+                .filter(condition)
                 .mapToDouble(Piece::getScore)
-                .sum() - adjustPawnScore();
+                .sum() - adjustPawnScoreByTeam(pieceTeam);
     }
 
     public boolean isGamePlaying() {
@@ -106,22 +116,21 @@ public class ChessBoard {
         }
     }
 
-    private double adjustPawnScore() {
+    private double adjustPawnScoreByTeam(PieceTeam pieceTeam) {
         return File.stream()
-                .map(this::duplicatePieceCountByRank)
+                .map(file -> duplicatePieceCountByRankAndTeam(file, pieceTeam))
                 .filter(count -> count >= 2)
                 .mapToDouble(point -> point * 0.5)
                 .sum();
     }
 
-    private long duplicatePieceCountByRank(File file) {
+    private long duplicatePieceCountByRankAndTeam(File file, PieceTeam pieceTeam) {
         return Arrays.stream(Rank.values())
                 .map(rank -> Position.of(file, rank))
                 .filter(position -> {
-                            Piece piece = board.get(position);
-                            return piece.isPawn() && gameFlow.isCorrectTurn(piece);
-                        }
-                ).count();
+                    Piece piece = board.get(position);
+                    return piece.isPawn() && piece.isPieceTeam(pieceTeam);
+                }).count();
     }
 
     public State currentState() {

@@ -1,8 +1,11 @@
 package chess.turndecider.state;
 
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceTeam;
 
-public class Finish implements State{
+public class Finish implements State {
+
+    public static final String UNSUPPORTED_FUNCITON_MESSAGE = "[ERROR] 지원하지 않는 기능입니다.";
 
     @Override
     public boolean isSameColor(Piece sourcePiece) {
@@ -11,7 +14,7 @@ public class Finish implements State{
 
     @Override
     public State nextState(boolean isGameFinished) {
-        throw new UnsupportedOperationException("[ERROR] 지원하지 않는 기능입니다.");
+        throw new UnsupportedOperationException(UNSUPPORTED_FUNCITON_MESSAGE);
     }
 
     @Override
@@ -22,5 +25,10 @@ public class Finish implements State{
     @Override
     public String getName() {
         return "";
+    }
+
+    @Override
+    public PieceTeam pieceTeam() {
+        throw new UnsupportedOperationException(UNSUPPORTED_FUNCITON_MESSAGE);
     }
 }

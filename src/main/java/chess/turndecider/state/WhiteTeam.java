@@ -25,4 +25,9 @@ public class WhiteTeam extends Running {
     public String getName() {
         return name;
     }
+
+    @Override
+    public PieceTeam pieceTeam() {
+        return pieceTeam;
+    }
 }

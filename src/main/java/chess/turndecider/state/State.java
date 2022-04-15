@@ -1,6 +1,7 @@
 package chess.turndecider.state;
 
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceTeam;
 
 public interface State {
 
@@ -11,4 +12,6 @@ public interface State {
     boolean isRunning();
 
     String getName();
+
+    PieceTeam pieceTeam();
 }
