@@ -1,14 +1,13 @@
 package chess.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import chess.domain.user.User;
+import java.sql.Connection;
+import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.sql.Connection;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class DbUserDaoTest {
 
@@ -32,35 +31,25 @@ class DbUserDaoTest {
 
     @Test
     void saveAndFindById() {
-        User user = new User("philz", "성우");
+        User user = new User("philz");
         userDao.save(user);
-        User findUser = userDao.findById("philz");
+        User findUser = userDao.findByName("philz");
         assertThat(findUser).isEqualTo(user);
     }
 
     @Test
     void findAll() {
-        userDao.save(new User("user a", "사람 a"));
-        userDao.save(new User("user b", "사람 b"));
+        userDao.save(new User("user a"));
+        userDao.save(new User("user b"));
         List<User> Users = userDao.findAll();
         assertThat(Users.size()).isEqualTo(2);
     }
 
     @Test
-    void update() {
-        String id = "philz";
-        User user = new User(id, "성우");
-        userDao.save(user);
-        userDao.update(new User(id, "필즈쿤"));
-        User findUser = userDao.findById(id);
-        assertThat(findUser.getName()).isEqualTo("필즈쿤");
-    }
-
-    @Test
     void deleteById() {
-        userDao.save(new User("user a", "사람 a"));
-        userDao.save(new User("user b", "사람 b"));
-        userDao.deleteById("user a");
+        userDao.save(new User("user a"));
+        userDao.save(new User("user b"));
+        userDao.deleteByName("user a");
         List<User> Users = userDao.findAll();
         assertThat(Users.size()).isEqualTo(1);
     }

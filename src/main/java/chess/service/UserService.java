@@ -18,23 +18,10 @@ public class UserService {
     }
 
     public User findById(String id) {
-        return userDao.findById(id);
+        return userDao.findByName(id);
     }
 
     public List<User> findAll(String id) {
         return userDao.findAll();
-    }
-
-    public void update(User user) {
-        userDao.update(user);
-    }
-
-    public void merge(User user) {
-        User findUser = userDao.findById(user.getId());
-        if (findUser == null) {
-            userDao.save(user);
-            return;
-        }
-        userDao.update(findUser);
     }
 }

@@ -8,13 +8,11 @@ public interface UserDao {
 
     void save(User user);
 
-    User findById(String id);
+    User findByName(String id);
 
     List<User> findAll();
 
-    void update(User user);
-
-    void deleteById(String id);
+    void deleteByName(String id);
 
     void deleteAll();
 }
