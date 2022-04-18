@@ -1,6 +1,6 @@
 package chess;
 
-import chess.controller.ChessController;
+import chess.controller.ConsoleChessController;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.factory.BoardFactory;
 import chess.domain.board.factory.RegularBoardFactory;
@@ -14,7 +14,7 @@ public class ConsoleApplication {
         GameFlow gameFlow = new AlternatingGameFlow();
         ChessBoard chessBoard = new ChessBoard(boardFactory.create(), gameFlow);
 
-        ChessController chessController = new ChessController(chessBoard);
-        chessController.run();
+        ConsoleChessController consoleChessController = new ConsoleChessController(chessBoard);
+        consoleChessController.run();
     }
 }

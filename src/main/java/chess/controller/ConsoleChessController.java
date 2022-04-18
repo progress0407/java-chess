@@ -8,11 +8,11 @@ import chess.view.OutputView;
 
 import static java.lang.System.err;
 
-public class ChessController {
+public class ConsoleChessController {
 
     private final ChessBoard chessBoard;
 
-    public ChessController(ChessBoard chessBoard) {
+    public ConsoleChessController(ChessBoard chessBoard) {
         this.chessBoard = chessBoard;
     }
 

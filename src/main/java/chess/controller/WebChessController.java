@@ -1,10 +1,10 @@
-package chess;
+package chess.controller;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
-import static spark.Spark.staticFiles;
 
-import chess.controller.WebChessController;
+import chess.dao.DbUserDao;
+import chess.dao.UserDao;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.factory.BoardFactory;
 import chess.domain.board.factory.RegularBoardFactory;
@@ -21,23 +21,15 @@ import java.util.Map;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
-public class WebApplication {
-
+public class WebChessController {
     private static final Gson gson = new Gson();
+
     private static ChessBoard chessBoard;
+    private static UserService userService;
 
-    public static void main(String[] args) {
-        staticFiles.location("/static");
-
-        WebChessController.index();
-        WebChessController.newGame();
-        WebChessController.openGame();
-        WebChessController.move();
-        WebChessController.currentTeam();
-        final Map<String, User> inGameUser = new HashMap<>();
-        WebChessController.playGame(inGameUser);
-        WebChessController.users(inGameUser);
-        WebChessController.board();
+    static {
+        UserDao userDao = new DbUserDao();
+        userService = new UserService(userDao);
     }
 
     private static ChessBoard generateChessBoard() {
@@ -46,11 +38,28 @@ public class WebApplication {
         return new ChessBoard(boardFactory.create(), gameFlow);
     }
 
-    private static void currentTeam(ChessBoard chessBoard) {
-        post("/current-team", (req, res) -> chessBoard.currentState().getName(), gson::toJson);
+    public static void index() {
+        get("/", (request, response) -> {
+            final Map<String, Object> model = new HashMap<>();
+            return render(model, "index.html");
+        });
     }
 
-    private static void move(ChessBoard chessBoard) {
+    public static void newGame() {
+        get("/new-game", (request, response) -> {
+            final Map<String, Object> model = new HashMap<>();
+            return render(model, "new_game.html");
+        });
+    }
+
+    public static void openGame() {
+        get("/open-game", (request, response) -> {
+            final Map<String, Object> model = new HashMap<>();
+            return render(model, "open_game.html");
+        });
+    }
+
+    public static void move() {
         post("/move", (request, response) -> {
             Position from = Position.of(request.queryParams("from"));
             Position to = Position.of(request.queryParams("to"));
@@ -62,15 +71,21 @@ public class WebApplication {
         }, gson::toJson);
     }
 
-    private static void users(Map<String, User> inGameUser) {
+    public static void currentTeam() {
+        post("/current-team", (request, response) -> chessBoard.currentState().getName(), gson::toJson);
+    }
+
+    public static void users(Map<String, User> inGameUser) {
         get("/users", (request, response) -> inGameUser, gson::toJson);
     }
 
-    private static void board(BoardResponse initBoardResponse) {
+    public static void board() {
+        final Map<Position, Piece> initBoard = RegularBoardFactory.getInstance().create();
+        final BoardResponse initBoardResponse = BoardResponse.from(initBoard);
         get("/board", "application/json", (request, response) -> initBoardResponse, gson::toJson);
     }
 
-    private static void playGame(UserService userService, Map<String, User> inGameUser) {
+    public static void playGame(Map<String, User> inGameUser) {
         post("/play-game", (request, response) -> {
             final Map<String, Object> model = new HashMap<>();
 
@@ -87,27 +102,6 @@ public class WebApplication {
             chessBoard = generateChessBoard();
 
             return render(model, "play_game.html");
-        });
-    }
-
-    private static void openGame() {
-        get("/open-game", (request, response) -> {
-            final Map<String, Object> model = new HashMap<>();
-            return render(model, "open_game.html");
-        });
-    }
-
-    private static void newGame() {
-        get("/new-game", (request, response) -> {
-            final Map<String, Object> model = new HashMap<>();
-            return render(model, "new_game.html");
-        });
-    }
-
-    private static void index() {
-        get("/", (request, response) -> {
-            final Map<String, Object> model = new HashMap<>();
-            return render(model, "index.html");
         });
     }
 
