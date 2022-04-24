@@ -9,11 +9,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DbUserDao extends Dao implements UserDao {
+public class DbUserDao implements UserDao {
 
     @Override
     public void save(User user) {
-        final Connection connection = getConnection();
+        final Connection connection = MysqlDao.getConnection();
         final String sql = "insert users(user_name, created_at) values(?, ?)";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -28,7 +28,7 @@ public class DbUserDao extends Dao implements UserDao {
 
     @Override
     public User findByName(String name) {
-        final Connection connection = getConnection();
+        final Connection connection = MysqlDao.getConnection();
         final String sql = "select * from users where user_name = ?";
         final PreparedStatement statement;
         try {
@@ -50,7 +50,7 @@ public class DbUserDao extends Dao implements UserDao {
 
     @Override
     public List<User> findAll() {
-        final Connection connection = getConnection();
+        final Connection connection = MysqlDao.getConnection();
         final String sql = "select * from users";
         final PreparedStatement statement;
         try {
@@ -73,7 +73,7 @@ public class DbUserDao extends Dao implements UserDao {
 
     @Override
     public void deleteByName(String name) {
-        final Connection connection = getConnection();
+        final Connection connection = MysqlDao.getConnection();
         final String sql = "delete from users where user_name = ?";
         final PreparedStatement statement;
         try {
@@ -88,7 +88,7 @@ public class DbUserDao extends Dao implements UserDao {
 
     @Override
     public void deleteAll() {
-        final Connection connection = getConnection();
+        final Connection connection = MysqlDao.getConnection();
         final String sql = "delete from users";
         final PreparedStatement statement;
         try {

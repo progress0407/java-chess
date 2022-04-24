@@ -1,16 +1,19 @@
 package chess.dao;
 
+import static chess.constant.MysqlDbConstant.DRIVER_PATH;
+import static chess.constant.MysqlDbConstant.PASSWORD;
+import static chess.constant.MysqlDbConstant.URL;
+import static chess.constant.MysqlDbConstant.USERNAME;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import static chess.constant.DbConstant.*;
+public class MysqlDao {
 
-public abstract class Dao {
+    private static Connection connection = null;
 
-    private Connection connection = null;
-
-    public Connection getConnection() {
+    public static Connection getConnection() {
         if (connection != null) {
             return connection;
         }
@@ -23,9 +26,9 @@ public abstract class Dao {
         return connection;
     }
 
-    private void loadDriver() {
+    private static void loadDriver() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName(DRIVER_PATH);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

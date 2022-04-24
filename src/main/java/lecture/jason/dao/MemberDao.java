@@ -1,6 +1,6 @@
 package lecture.jason.dao;
 
-import chess.dao.Dao;
+import chess.dao.MysqlDao;
 import lecture.jason.domain.Member;
 
 import java.sql.Connection;
@@ -10,7 +10,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MemberDao extends Dao {
+public class MemberDao extends MysqlDao {
+
+    private MysqlDao dao;
 
     public void save(Member member) {
         final Connection connection = getConnection();

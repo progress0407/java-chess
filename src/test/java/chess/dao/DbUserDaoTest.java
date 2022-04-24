@@ -3,7 +3,6 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.user.User;
-import java.sql.Connection;
 import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,11 +22,7 @@ class DbUserDaoTest {
         userDao.deleteAll();
     }
 
-    @Test
-    void connection() {
-        Connection connection = userDao.getConnection();
-        assertThat(connection).isNotNull();
-    }
+
 
     @Test
     void saveAndFindById() {
