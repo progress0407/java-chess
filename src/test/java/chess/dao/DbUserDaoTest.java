@@ -22,8 +22,6 @@ class DbUserDaoTest {
         userDao.deleteAll();
     }
 
-
-
     @Test
     void saveAndFindById() {
         User user = new User("philz");
